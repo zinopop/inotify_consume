@@ -1,0 +1,27 @@
+# 静态文件相关配置
+[static]
+    [static.dir]
+        # 监听目录
+        listenDir = "D:\\listen"
+        # 本地备份目录
+        localBakDir = "D:\\Workspace\\golang\\src\\inotify_consume\\file\\static_bak"
+        # 存放目标目录
+        targetDir = "D:\\tag"
+
+# mysql同步相关配置
+[mysql]
+    [mysql.dir]
+        # 监听目录
+        listenDir = "D:\\listen"
+        # 本地备份目录
+        localBakDir = "D:\\Workspace\\golang\\src\\inotify_consume\\file\\binlog_bak"
+    # 目标mysql数据库配置
+    [mysql.conn]
+        Host     = "192.168.18.19"
+        Port     = "3307"
+        User     = "root"
+        Pass     = "root"
+        Name     = "product"
+        Type     = "mysql"
+        Charset  = "utf8mb4"
+
