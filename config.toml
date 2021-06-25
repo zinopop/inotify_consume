@@ -17,8 +17,8 @@
         localBakDir = "D:\\Workspace\\golang\\src\\inotify_consume\\file\\binlog_bak"
     # 目标mysql数据库配置
     [mysql.conn]
-        Host     = "192.168.18.19"
-        Port     = "3307"
+        Host     = "192.168.18.37"
+        Port     = "3306"
         User     = "root"
         Pass     = "root"
         Name     = "product"

@@ -15,19 +15,19 @@ var StaticFile = new(static)
 
 type static struct{}
 
-func(s *static) AnalyticalFile(ch chan string){
+func (s *static) AnalyticalFile(ch chan string) {
 	listenDir := g.Cfg().GetString("static.dir.listenDir")
-	fmt.Println("当前监听文件夹:",listenDir)
-	dirExit,err := lib.Common.PathExists(listenDir)
-	if err !=nil {
+	fmt.Println("当前监听文件夹:", listenDir)
+	dirExit, err := lib.Common.PathExists(listenDir)
+	if err != nil {
 		fmt.Println(err)
 		ch <- err.Error()
 	}
 	if !dirExit {
-		fmt.Println("目录:<"+listenDir+">不存在")
-		ch <- "目录:<"+listenDir+">不存在"
+		fmt.Println("目录:<" + listenDir + ">不存在")
+		ch <- "目录:<" + listenDir + ">不存在"
 	}
-	for  {
+	for {
 		filepathNamesarray, err := filepath.Glob(filepath.Join(listenDir, "*"))
 		if len(filepathNamesarray) <= 0 {
 			fmt.Println("static task sleep after 2 Minute")
@@ -38,13 +38,18 @@ func(s *static) AnalyticalFile(ch chan string){
 			ch <- err.Error()
 			break
 		}
-		filepathNames := make([]string,0)
-		for _,val := range filepathNamesarray{
+		filepathNames := make([]string, 0)
+		for _, val := range filepathNamesarray {
 			_, fileName := filepath.Split(val)
 			fileTmp := strings.Split(fileName, "_")
-			if len(fileTmp) == 2 && path.Ext(val) == ".zip"{
+			//if len(fileTmp) == 2 && path.Ext(val) == ".zip"{
+			//	if fileTmp[0] == "static" {
+			//		filepathNames = append(filepathNames,val)
+			//	}
+			//}
+			if path.Ext(val) == ".zip" {
 				if fileTmp[0] == "static" {
-					filepathNames = append(filepathNames,val)
+					filepathNames = append(filepathNames, val)
 				}
 			}
 		}
@@ -55,32 +60,29 @@ func(s *static) AnalyticalFile(ch chan string){
 			continue
 		}
 
-		for _,val := range filepathNames{
-			fmt.Println("开始解压",val)
-			if _,err := lib.Zip.DeCompressByPath(val,g.Cfg().GetString("static.dir.targetDir")); err != nil {
-				fmt.Println("解压失败",err)
+		for _, val := range filepathNames {
+			fmt.Println("开始解压", val)
+			if _, err := lib.Zip.DeCompressByPath(val, g.Cfg().GetString("static.dir.targetDir")); err != nil {
+				fmt.Println("解压失败", err)
 				time.Sleep(time.Second * 1)
 				continue
 			}
 			file := lib.Common.LoopHandelFile(val)
-			fileInfo,_ := file.Stat()
+			fileInfo, _ := file.Stat()
 			file.Close()
-			fmt.Println("开始备份",val)
+			fmt.Println("开始备份", val)
 			//if err := os.Rename(val,g.Cfg().GetString("static.dir.localBakDir")+"\\"+fileInfo.Name()); err != nil {
 			//	fmt.Println("remove",err)
 			//}
 
-			if _,err := lib.Common.CopyFile(val,g.Cfg().GetString("static.dir.localBakDir")+"\\"+fileInfo.Name());err != nil {
-				fmt.Println("copy fail",err)
-			}else {
-				if err := os.Remove(val);err != nil {
-					fmt.Println("remove fail",err)
+			if _, err := lib.Common.CopyFile(val, g.Cfg().GetString("static.dir.localBakDir")+"\\"+fileInfo.Name()); err != nil {
+				fmt.Println("copy fail", err)
+			} else {
+				if err := os.Remove(val); err != nil {
+					fmt.Println("remove fail", err)
 				}
 			}
-			fmt.Println("备份结束",val)
+			fmt.Println("备份结束", val)
 		}
 	}
 }
-
-
-
