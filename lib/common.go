@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"strings"
 )
 
 var Common = new(common)
+var ostype = runtime.GOOS
 
-type common struct {}
+type common struct{}
 
 func (c *common) PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -22,9 +24,9 @@ func (c *common) PathExists(path string) (bool, error) {
 	return false, err
 }
 
-func (c *common) LoopHandelFile(file string) (*os.File){
+func (c *common) LoopHandelFile(file string) *os.File {
 	//var filesize int64
-	var loop = func(f string) *os.File{
+	var loop = func(f string) *os.File {
 		file, err := os.Open(f)
 		if err != nil {
 			return nil
@@ -54,7 +56,7 @@ func (c *common) LoopHandelFile(file string) (*os.File){
 	return loop
 }
 
-func (c *common)ReadFile(filename string) []string{
+func (c *common) ReadFile(filename string) []string {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println(err)
@@ -102,3 +104,22 @@ func (c *common) CopyFile(src, dst string) (int64, error) {
 	nBytes, err := io.CopyN(destination, source, sourceFileStat.Size())
 	return nBytes, err
 }
+
+func (c *common) PathHandle() string {
+	var flag string
+	if ostype == "windows" {
+		flag = "\\"
+	} else if ostype == "linux" {
+		flag = "/"
+	}
+	return flag
+}
+
+//func (c *common) PathHandle (path string) string {
+//	if ostype == "windows" {
+//		path = path + "\\"
+//	} else if ostype == "linux" {
+//		path = path + "/"
+//	}
+//	return path
+//}

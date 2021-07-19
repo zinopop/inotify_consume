@@ -1,24 +1,24 @@
 package lib
 
 import (
+	"archive/zip"
 	"fmt"
 	"io"
 	"os"
-	"archive/zip"
 )
 
 var Zip = new(zipLib)
 
-type zipLib struct {}
+type zipLib struct{}
 
 /**
 @tarFile：压缩文件路径
 @dest：解压文件夹
 */
-func (z *zipLib)DeCompressByPath(tarFile, dest string) ([]string,error) {
+func (z *zipLib) DeCompressByPath(tarFile, dest string) ([]string, error) {
 	srcFile, err := os.Open(tarFile)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	defer srcFile.Close()
 	return DeCompress(srcFile, dest)
@@ -28,12 +28,12 @@ func (z *zipLib)DeCompressByPath(tarFile, dest string) ([]string,error) {
 @zipFile：压缩文件
 @dest：解压之后文件保存路径
 */
-func DeCompress(srcFile *os.File, dest string) ([]string,error) {
+func DeCompress(srcFile *os.File, dest string) ([]string, error) {
 	zipFile, err := zip.OpenReader(srcFile.Name())
-	files := make([]string,0)
+	files := make([]string, 0)
 	if err != nil {
 		fmt.Println("Unzip File Error：", err.Error())
-		return nil,err
+		return nil, err
 	}
 	defer zipFile.Close()
 	for _, innerFile := range zipFile.File {
@@ -42,7 +42,7 @@ func DeCompress(srcFile *os.File, dest string) ([]string,error) {
 			err = os.MkdirAll(innerFile.Name, os.ModePerm)
 			if err != nil {
 				fmt.Println("Unzip File Error : " + err.Error())
-				return nil,err
+				return nil, err
 			}
 			continue
 		}
@@ -52,14 +52,15 @@ func DeCompress(srcFile *os.File, dest string) ([]string,error) {
 			continue
 		}
 		defer srcFile.Close()
-		newFile, err := os.Create(dest+"\\"+innerFile.Name)
+
+		newFile, err := os.Create(dest + Common.PathHandle() + innerFile.Name)
 		if err != nil {
 			fmt.Println("Unzip File Error : " + err.Error())
 			continue
 		}
 		io.Copy(newFile, srcFile)
-		files = append(files, dest+"\\"+innerFile.Name)
+		files = append(files, dest+Common.PathHandle()+innerFile.Name)
 		newFile.Close()
 	}
-	return files,nil
+	return files, nil
 }

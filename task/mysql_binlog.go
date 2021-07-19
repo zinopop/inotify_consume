@@ -74,7 +74,8 @@ func (m *mysqlBinlog) AnalyticalFile(ch chan string) {
 			fileInfo, _ := file.Stat()
 			file.Close()
 			fmt.Println("开始备份", val)
-			if _, err := lib.Common.CopyFile(val, g.Cfg().GetString("mysql.dir.localBakDir")+"\\"+fileInfo.Name()); err != nil {
+
+			if _, err := lib.Common.CopyFile(val, g.Cfg().GetString("mysql.dir.localBakDir")+lib.Common.PathHandle()+fileInfo.Name()); err != nil {
 				fmt.Println("copy fail", err)
 			} else {
 				if err := os.Remove(val); err != nil {

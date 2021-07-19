@@ -75,7 +75,7 @@ func (s *static) AnalyticalFile(ch chan string) {
 			//	fmt.Println("remove",err)
 			//}
 
-			if _, err := lib.Common.CopyFile(val, g.Cfg().GetString("static.dir.localBakDir")+"\\"+fileInfo.Name()); err != nil {
+			if _, err := lib.Common.CopyFile(val, g.Cfg().GetString("static.dir.localBakDir")+lib.Common.PathHandle()+fileInfo.Name()); err != nil {
 				fmt.Println("copy fail", err)
 			} else {
 				if err := os.Remove(val); err != nil {
