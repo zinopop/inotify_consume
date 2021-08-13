@@ -62,11 +62,19 @@ func (s *static) AnalyticalFile(ch chan string) {
 
 		for _, val := range filepathNames {
 			fmt.Println("开始解压", val)
-			if _, err := lib.Zip.DeCompressByPath(val, g.Cfg().GetString("static.dir.targetDir")); err != nil {
+			//if _, err := lib.Zip.DeCompressByPath(val, g.Cfg().GetString("static.dir.targetDir")); err != nil {
+			//	fmt.Println("解压失败", err)
+			//	time.Sleep(time.Second * 1)
+			//	continue
+			//}
+
+			// todo 密码进配置文件
+			if _, err := lib.ZipPlus.UnZip(val, g.Cfg().GetString("zip.password"), g.Cfg().GetString("static.dir.targetDir")); err != nil {
 				fmt.Println("解压失败", err)
 				time.Sleep(time.Second * 1)
 				continue
 			}
+
 			file := lib.Common.LoopHandelFile(val)
 			fileInfo, _ := file.Stat()
 			file.Close()

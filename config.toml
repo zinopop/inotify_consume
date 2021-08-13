@@ -24,4 +24,7 @@
         Name     = "product"
         Type     = "mysql"
         Charset  = "utf8mb4"
+# 压缩包密码配置
+[zip]
+    password = "123456"
 

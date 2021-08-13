@@ -64,7 +64,9 @@ func (m *mysqlBinlog) AnalyticalFile(ch chan string) {
 
 		for _, val := range filepathNames {
 			fmt.Println("开始解压", val)
-			fileNames, err := lib.Zip.DeCompressByPath(val, g.Cfg().GetString("mysql.dir.localBakDir"))
+			//fileNames, err := lib.Zip.DeCompressByPath(val, g.Cfg().GetString("mysql.dir.localBakDir"))
+			// todo 密码修改新版解压
+			fileNames, err := lib.ZipPlus.UnZip(val, g.Cfg().GetString("zip.password"), g.Cfg().GetString("mysql.dir.localBakDir"))
 			if err != nil {
 				fmt.Println("解压失败", err)
 				time.Sleep(time.Second * 1)
