@@ -15,5 +15,5 @@ go build -o build/linux_consume
 
 copy config.toml build
 
-7z a bin/consume.zip build
+7z a bin/inotify_consume.zip build
 
